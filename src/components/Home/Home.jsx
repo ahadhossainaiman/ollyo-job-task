@@ -9,56 +9,78 @@ import img_8 from "../../assets/images/image-8.webp";
 import img_9 from "../../assets/images/image-9.webp";
 import img_10 from "../../assets/images/image-10.jpeg";
 import img_11 from "../../assets/images/image-11.jpeg";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const Home = () => {
   const img_gallery = [
     {
       id: 1,
       img: img_1,
+      isChecked:false
     },
     {
       id: 2,
       img: img_2,
+      isChecked:false
     },
     {
       id: 3,
       img: img_3,
+      isChecked:false
     },
     {
       id: 4,
       img: img_4,
+      isChecked:false
     },
     {
       id: 5,
       img: img_5,
+      isChecked:false
     },
     {
       id: 6,
       img: img_6,
+      isChecked:false
     },
     {
       id: 7,
       img: img_7,
+      isChecked:false
     },
     {
       id: 8,
       img: img_8,
+      isChecked:false
     },
     {
       id: 9,
       img: img_9,
+      isChecked:false
     },
     {
       id: 10,
       img: img_10,
+      isChecked:false
     },
     {
         id: 11,
         img: img_11,
+        isChecked:false
       },
   ];
+  const [selectedImg, setSelectedImg] = useState(img_gallery);
   const fileInput = useRef();
+
+const handleSelectedImg = (id)=>{
+    const updateSelectedImg = selectedImg.map((img)=>{
+        return img.id===id?{...img,isChecked:!img.isChecked}:img
+    });
+    setSelectedImg(updateSelectedImg)
+}
+
+console.log(selectedImg);
+
   const handleImageUpload = () =>{
     fileInput.current.click();
   }
@@ -69,6 +91,7 @@ const Home = () => {
       console.log(selectedFile);
     }
   };
+
   return (
     
     <>
@@ -85,7 +108,7 @@ const Home = () => {
       </nav>
 
       <section className="grid grid-cols-5 gap-4 w-[80%] mx-auto my-8">
-        {img_gallery.map((image, index) => {
+        {selectedImg.map((image, index) => {
           return (
             <>
               <div
@@ -97,8 +120,9 @@ const Home = () => {
               >
                 <img src={image.img} alt="" />
                 {/* hover */}
-                <div className="bg-[rgba(0,0,0,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0 opacity-0 transition-all z-0 hover:opacity-50">
-                <input className="absolute top-5 left-5 w-5 h-5" type="checkbox" name="" id="" />
+                <div className={image.isChecked?`bg-[rgba(236,108,108,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0  transition-all opacity-50`:`bg-[rgba(0,0,0,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0 opacity-0 transition-all hover:opacity-50`}>
+                <input  checked={selectedImg.isChecked}
+          onChange={()=>handleSelectedImg(image.id)}  className="absolute top-5 left-5 w-5 h-5" type="checkbox" name="" id="" />
                 </div>
                 
               </div>
