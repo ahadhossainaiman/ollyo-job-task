@@ -91,16 +91,21 @@ const Home = () => {
               <div
                 className={
                   index === 0
-                    ? "col-span-2 row-span-2 border-2 rounded-md"
-                    : " border-2 rounded-md"
+                    ? "col-span-2 row-span-2 border-2 rounded-md  relative"
+                    : " border-2 rounded-md  relative "
                 }
               >
                 <img src={image.img} alt="" />
+                {/* hover */}
+                <div className="bg-[rgba(0,0,0,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0 opacity-0 transition-all z-0 hover:opacity-50">
+                <input className="absolute top-5 left-5 w-5 h-5" type="checkbox" name="" id="" />
+                </div>
+                
               </div>
             </>
           );
         })}
-        <div className=" border-2 rounded-md flex flex-col justify-center items-center cursor-pointer gap-5
+        <div className=" border-2 rounded-md flex flex-col justify-center items-center cursor-pointer gap-5 
         "  onClick={handleImageUpload}>
           <img
             className="mx-auto"
