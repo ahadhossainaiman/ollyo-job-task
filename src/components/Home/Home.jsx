@@ -10,7 +10,7 @@ import img_9 from "../../assets/images/image-9.webp";
 import img_10 from "../../assets/images/image-10.jpeg";
 import img_11 from "../../assets/images/image-11.jpeg";
 import { useRef, useState } from "react";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+
 
 const Home = () => {
   const img_gallery = [
@@ -115,7 +115,6 @@ const Home = () => {
 
   return (
     <section className="w-[85%] mx-auto my-10">
-   
       {deleteImage.length > 0 ? (
         <>
           <nav className="flex bg-white rounded-t-md justify-between w-[80%] mx-auto py-5 px-4 border-b-2 border-b-slate-300">
@@ -152,8 +151,10 @@ const Home = () => {
       )}
 
       <section className="grid rounded-b-md bg-white grid-cols-5 gap-4 w-[80%] mx-auto py-8 px-5">
-      <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="boxes" direction="horizontal">
+    
+    
+
+
         {selectedImg.map((image, index) => {
           return (
             <>
@@ -186,8 +187,9 @@ const Home = () => {
             </>
           );
         })}
-         </Droppable>
-        </DragDropContext>
+
+      
+    
         <div
           className=" border-2 rounded-md  flex flex-col justify-center items-center cursor-pointer gap-5 
         "
