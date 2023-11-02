@@ -35,8 +35,8 @@ You can interact with the live demo of this project by visiting https://ollyo-jo
 
 ## Screenshots
 
-![Sample Image](../ollyo-project/src/assets/images/Pixel-3-3-XL-393x786.png)
+![Sample Image](./src/assets/images/Pixel-3-3-XL-393x786.png)
 
-![Sample Image](../ollyo-project/src/assets/images/Medium-Screen-1024x800.png)
+![Sample Image](./src/assets/images/Medium-Screen-1024x800.png)
 
-![Sample Image](../ollyo-project/src/assets/images/md-img.png)
+![Sample Image](./src/assets/images/md-img.png)
