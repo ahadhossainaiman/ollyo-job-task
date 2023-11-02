@@ -116,6 +116,7 @@ const Home = () => {
       setSelectedImg((prevImg) => [...prevImg, newImage]);
     }
     e.target.value = null;
+    console.log(selectedImg);
   };
 
   const handleSelectedChange = () => {
