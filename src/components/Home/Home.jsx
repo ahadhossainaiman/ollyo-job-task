@@ -10,6 +10,7 @@ import img_9 from "../../assets/images/image-9.webp";
 import img_10 from "../../assets/images/image-10.jpeg";
 import img_11 from "../../assets/images/image-11.jpeg";
 import { useRef, useState } from "react";
+import ImageCart from "../ImageCart/ImageCart";
 
 
 const Home = () => {
@@ -72,6 +73,7 @@ const Home = () => {
   ];
   const [selectedImg, setSelectedImg] = useState(img_gallery);
   const [deleteImage, setDeleteImage] = useState([]);
+  const [draggedIndex, setDraggedIndex] = useState(null);
   const fileInput = useRef();
 
   const handleSelectedImg = (id) => {
@@ -79,7 +81,7 @@ const Home = () => {
       return img.id === id ? { ...img, isChecked: !img.isChecked } : img;
     });
 
-    const deleteItemCount = updateSelectedImg.filter((image) => {
+  const deleteItemCount = updateSelectedImg.filter((image) => {
       if (image.isChecked) {
         return image;
       }
@@ -87,8 +89,7 @@ const Home = () => {
     setDeleteImage(deleteItemCount);
     setSelectedImg(updateSelectedImg);
   };
-  console.log(selectedImg);
-  console.log(deleteImage);
+  
 
   const handleDeleteImage = () => {
     const remainingImage = selectedImg.filter((image) => {
@@ -96,37 +97,75 @@ const Home = () => {
         return image;
       }
     });
-    console.log(remainingImage);
-    // console.log(deleteIImage);
     setSelectedImg(remainingImage);
     setDeleteImage([]);
   };
 
-  const handleImageUpload = () => {
+  const handleFileClick = () => {
     fileInput.current.click();
   };
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      console.log("Selected file:", selectedFile.name);
-      console.log(selectedFile);
+  const handleImageUpload = (e) => {
+    const files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const id = selectedImg.length + i + 1;
+      console.log(id);
+      const img_path = URL.createObjectURL(file);
+
+      const newImage = { id, img: img_path, isChecked: false };
+      console.log(newImage);
+
+      setSelectedImg((prevImg) => [...prevImg, newImage]);
+
+    }
+    e.target.value = null;
+  };
+
+  const handleSelectedChange = ()=>{
+    const updateSelectedImg = selectedImg.map((img) => {
+      return { ...img, isChecked: false }
+    });
+    setSelectedImg(updateSelectedImg)
+    setDeleteImage([])
+  }
+
+
+  // dnd
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData('index', index);
+    setDraggedIndex(index);
+  };
+  const handleDrop = (e, newIndex) => {
+    const startIndex = e.dataTransfer.getData('index');
+    const updatedBoxes = [...selectedImg];
+    const [draggedBox] = updatedBoxes.splice(startIndex, 1);
+    updatedBoxes.splice(newIndex, 0, draggedBox);
+    setSelectedImg(updatedBoxes);
+    setDraggedIndex(null);
+  };
+  const handleDragOver = (e,index) => {
+    e.preventDefault();
+    if (index !== draggedIndex) {
+     
+      setDraggedIndex(index);
     }
   };
 
   return (
-    <section className="w-[85%] mx-auto my-10">
+    <div className="w-[85%] mx-auto my-10">
       {deleteImage.length > 0 ? (
         <>
-          <nav className="flex bg-white rounded-t-md justify-between w-[80%] mx-auto py-5 px-4 border-b-2 border-b-slate-300">
+          <nav className="flex lg:flex-row md:flex-col flex-col bg-white rounded-t-md justify-between w-[80%] mx-auto py-5 px-4 border-b-2 border-b-slate-300">
             <div className="flex items-center">
               <input
                 checked={true}
+                onChange={handleSelectedChange}
                 className="w-5 h-5"
                 type="checkbox"
                 name=""
                 id=""
               />
-              <p className="ml-5 text-2xl font-medium">
+              <p className="ml-5 text-2xl font-medium ">
                 {deleteImage.length === 1
                   ? `${deleteImage.length} File Selected`
                   : `${deleteImage.length} Files Selected`}
@@ -135,7 +174,7 @@ const Home = () => {
             <div>
               <button
                 onClick={handleDeleteImage}
-                className="border-none text-2xl text-red-600 font-medium"
+                className="border-none text-2xl text-red-600 font-medium md:mt-5 sm:mt-4"
               >
                 Delete File
               </button>
@@ -149,72 +188,49 @@ const Home = () => {
           </nav>
         </>
       )}
-
-      <section className="grid rounded-b-md bg-white grid-cols-5 gap-4 w-[80%] mx-auto py-8 px-5">
-    
-    
-
-
-        {selectedImg.map((image, index) => {
+      
+      <section className="grid rounded-b-md bg-white lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4 w-[80%] mx-auto py-8 px-5">
+     
+        {selectedImg?.map((image, index) => {
           return (
-            <>
-              <div
-                className={
-                  index === 0
-                    ? "col-span-2 row-span-2 border-2 rounded-md  relative"
-                    : " border-2 rounded-md  relative "
-                }
-              >
-                <img src={image.img} alt="" />
-                {/* hover */}
-                <div
-                  className={
-                    image.isChecked
-                      ? `bg-[rgba(236,108,108,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0  transition-all opacity-50`
-                      : `bg-[rgba(0,0,0,0.7)] absolute h-full w-full left-0 top-0 bottom-0 right-0 opacity-0 transition-all hover:opacity-50`
-                  }
-                >
-                  <input
-                    checked={image.isChecked}
-                    onChange={() => handleSelectedImg(image.id)}
-                    className="absolute top-5 left-5 w-5 h-5"
-                    type="checkbox"
-                    name=""
-                    id=""
-                  />
-                </div>
-              </div>
-            </>
+            <ImageCart
+              key={index}
+              image={image}
+              index={index}
+              handleSelectedImg={handleSelectedImg}
+              handleDrop={handleDrop}
+              handleDragStart={handleDragStart}
+              draggedIndex={draggedIndex}
+              handleDragOver={handleDragOver}
+            />
           );
         })}
 
-      
-    
         <div
-          className=" border-2 rounded-md  flex flex-col justify-center items-center cursor-pointer gap-5 
-        "
-          onClick={handleImageUpload}
+          className="border-2 border-dashed rounded-md  flex flex-col justify-center items-center w-[100%] cursor-pointer gap-5"
+          onClick={handleFileClick}
         >
           <img
             className="mx-auto"
-            width="28"
-            height="28"
+            width="100"
+            height="100"
             src="https://img.icons8.com/fluency-systems-regular/48/image--v1.png"
             alt="image--v1"
           />
 
-          <p className="font-medium text-xl">Add Images</p>
+          <p className="font-bold sm:text-xl md:text-1xl md:pb-5 sm:pb-5">Add Images</p>
         </div>
         <input
           type="file"
           id="fileInput"
           className="hidden "
-          onChange={handleFileChange}
+          onChange={handleImageUpload}
           accept="image/*"
           ref={fileInput}
         />
       </section>
-    </section>
+    
+    </div>
   );
 };
 
