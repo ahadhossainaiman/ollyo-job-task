@@ -1,12 +1,9 @@
-
 import { useRef, useState } from "react";
 import ImageCart from "../ImageCart/ImageCart";
 import fileUploadImg from "../../assets/images/loti.gif";
-import {img_gallery} from "../Home/Images";
+import { img_gallery } from "../Home/Images";
 
 const Home = () => {
- console.log(img_gallery);
-
   const [selectedImg, setSelectedImg] = useState(img_gallery);
   const [deleteImage, setDeleteImage] = useState([]);
   const [draggedIndex, setDraggedIndex] = useState(null);
@@ -27,6 +24,7 @@ const Home = () => {
     setSelectedImg(updateSelectedImg);
   };
 
+  // Selected Image Delete Function
   const handleDeleteImage = () => {
     const remainingImage = selectedImg.filter((image) => {
       if (!image.isChecked) {
@@ -37,6 +35,7 @@ const Home = () => {
     setDeleteImage([]);
   };
 
+  // File Upload Function
   const handleFileClick = () => {
     fileInput.current.click();
   };
@@ -46,15 +45,14 @@ const Home = () => {
       const file = files[i];
       const id = selectedImg.length + i + 1;
       const img_path = URL.createObjectURL(file);
-
       const newImage = { id, img: img_path, isChecked: false };
-
       setSelectedImg((prevImg) => [...prevImg, newImage]);
     }
     e.target.value = null;
     console.log(selectedImg);
   };
 
+  // Reset Function
   const handleSelectedChange = () => {
     const updateSelectedImg = selectedImg.map((img) => {
       return { ...img, isChecked: false };
@@ -121,7 +119,7 @@ const Home = () => {
         </>
       )}
 
-      <section className="grid rounded-b-md bg-white lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-1 gap-4 w-[80%] mx-auto py-8 px-5">
+      <section className="grid rounded-b-md bg-white lg:grid-cols-5 md:grid-cols-3 grid-cols-2 gap-4 w-[80%] mx-auto py-8 px-5">
         {selectedImg?.map((image, index) => {
           return (
             <ImageCart
@@ -138,7 +136,7 @@ const Home = () => {
         })}
 
         <div
-          className="border-2 border-dashed rounded-md  flex flex-col justify-center items-center w-[100%] cursor-pointer gap-5"
+          className="relative border-2 border-dashed rounded-md  flex flex-col justify-center items-center w-[100%] cursor-pointer"
           onClick={handleFileClick}
         >
           <img
@@ -146,7 +144,7 @@ const Home = () => {
             width="1200"
             height="1200"
             src={fileUploadImg}
-            alt=""
+            alt="Add Images"
           />
         </div>
         <input
